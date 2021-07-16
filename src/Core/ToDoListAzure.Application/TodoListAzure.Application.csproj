@@ -10,8 +10,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Infrastructure\ToDoListAzure.Persistence\TodoListAzure.Persistence.csproj" />
     <ProjectReference Include="..\ToDoListAzure.Domain\TodoListAzure.Domain.csproj" />
-    <ProjectReference Include="..\ToDoListAzure.Persistence\TodoListAzure.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

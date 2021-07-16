@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ToDoListAzure.Domain\TodoListAzure.Domain.csproj" />
+    <ProjectReference Include="..\..\Core\ToDoListAzure.Domain\TodoListAzure.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
