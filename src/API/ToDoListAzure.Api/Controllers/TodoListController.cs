@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using TodoListAzure.Application.Features.Commons.Results;
 using TodoListAzure.Application.Features.Todos.Commands.CreateTodoList;
+using TodoListAzure.Application.Features.Todos.Commands.UpdateTodoState;
 using TodoListAzure.Application.Features.Todos.Queries.GetTodoList;
 
 namespace TodoListAzure.Api.Controllers
@@ -47,6 +48,32 @@ namespace TodoListAzure.Api.Controllers
         {
             createCommand.AddCategoryId(categoryId);
             var todoResult = await _mediator.Send(createCommand);
+
+            return Ok(todoResult);
+        }
+
+        [HttpPut("todo/{todoId}/do")]
+        public async Task<ActionResult<TodoResult>> DoTodo([FromRoute] Guid todoId)
+        {
+            var updateCommand = new UpdateTodoStateCommand
+            {
+                TodoId = todoId,
+                SetToDone = true
+            };
+            var todoResult = await _mediator.Send(updateCommand);
+
+            return Ok(todoResult);
+        }
+
+        [HttpPut("todo/{todoId}/undo")]
+        public async Task<ActionResult<TodoResult>> UndoTodo([FromRoute] Guid todoId)
+        {
+            var updateCommand = new UpdateTodoStateCommand
+            {
+                TodoId = todoId,
+                SetToDone = false
+            };
+            var todoResult = await _mediator.Send(updateCommand);
 
             return Ok(todoResult);
         }

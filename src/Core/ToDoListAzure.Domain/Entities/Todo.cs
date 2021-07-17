@@ -22,6 +22,26 @@ namespace TodoListAzure.Domain.Entities
             return new Todo(description, creationDate, categoryId);
         }
 
+        public void SetAsDone()
+        {
+            if (IsDone == true)
+            {
+                throw new Exception();
+            }
+
+            IsDone = true;
+        }
+
+        public void SetAsUndone()
+        {
+            if (IsDone == false)
+            {
+                throw new Exception();
+            }
+
+            IsDone = false;
+        }
+
         private const int DescriptionMaxLength = 128;
 
         private Todo() { }
