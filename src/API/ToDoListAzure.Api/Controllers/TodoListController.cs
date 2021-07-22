@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using FluentResults;
+
 using MediatR;
 
 using Microsoft.AspNetCore.Http;
@@ -46,7 +48,12 @@ namespace TodoListAzure.Api.Controllers
             [FromRoute] Guid categoryId,
             [FromBody] CreateTodoCommand createCommand)
         {
-            createCommand.AddCategoryId(categoryId);
+            var commandResult = createCommand.AddCategoryId(categoryId);
+            if (commandResult.IsFailed)
+            {
+                return BadRequest(commandResult.Errors);
+            }
+
             var todoResult = await _mediator.Send(createCommand);
 
             return Ok(todoResult);

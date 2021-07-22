@@ -4,17 +4,20 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FluentResults;
+
 using MediatR;
 
 using Microsoft.EntityFrameworkCore;
 
+using TodoListAzure.Application.Errors.Commons;
 using TodoListAzure.Application.Features.Commons.Results;
 using TodoListAzure.Domain.Entities;
 using TodoListAzure.Persistence;
 
 namespace TodoListAzure.Application.Features.Todos.Queries.GetTodoList
 {
-    public class GetTodoListQueryHandler : IRequestHandler<GetTodoListQuery, PageResult<TodoResult>>
+    public class GetTodoListQueryHandler : IRequestHandler<GetTodoListQuery, Result<PageResult<TodoResult>>>
     {
         private readonly TodoContext _dbContext;
 
@@ -23,11 +26,11 @@ namespace TodoListAzure.Application.Features.Todos.Queries.GetTodoList
             _dbContext = dbContext;
         }
 
-        public async Task<PageResult<TodoResult>> Handle(GetTodoListQuery request, CancellationToken cancellationToken)
+        public async Task<Result<PageResult<TodoResult>>> Handle(GetTodoListQuery request, CancellationToken cancellationToken)
         {
             if (request.CategoryId == Guid.Empty)
             {
-                throw new Exception();
+                return Result.Fail(new ArgumentError("CategoryId cannot be null or empty"));
             }
 
             var totalItem = await GetTodoListCount(request.CategoryId, cancellationToken);
@@ -35,7 +38,7 @@ namespace TodoListAzure.Application.Features.Todos.Queries.GetTodoList
 
             var pagedResult = MapResult(todoList, totalItem, request.PaginationOptions);
 
-            return pagedResult;
+            return Result.Ok(pagedResult);
         }
 
         private async Task<int> GetTodoListCount(Guid categoryId, CancellationToken cancellationToken)

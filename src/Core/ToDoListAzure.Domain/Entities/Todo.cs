@@ -1,9 +1,16 @@
 ﻿using System;
 
+using FluentResults;
+
+using TodoListAzure.Domain.Errors.Generics;
+using TodoListAzure.Domain.Errors.Todos;
+
 namespace TodoListAzure.Domain.Entities
 {
     public class Todo
     {
+        public const int DescriptionMaxLength = 128;
+
         public Guid Id { get; private set; }
         public string Description { get; private set; }
         public bool IsDone { get; private set; }
@@ -12,37 +19,39 @@ namespace TodoListAzure.Domain.Entities
         public Guid CategoryId { get; private set; }
         public TodoCategory Category { get; private set; } = null;
 
-        public static Todo Create(string description, DateTime creationDate, Guid categoryId)
+        public static Result<Todo> Create(string description, DateTime creationDate, Guid categoryId)
         {
             if (description.Length > DescriptionMaxLength)
             {
-                throw new ArgumentException($"Description cannot be longer than {DescriptionMaxLength} characters");
+                return Result.Fail(new TextTooLongError(nameof(Description), DescriptionMaxLength));
             }
 
-            return new Todo(description, creationDate, categoryId);
+            return Result.Ok(new Todo(description, creationDate, categoryId));
         }
 
-        public void SetAsDone()
+        public Result SetAsDone()
         {
             if (IsDone == true)
             {
-                throw new Exception();
+                return Result.Fail(new DoStateChangeError());
             }
 
             IsDone = true;
+            return Result.Ok();
         }
 
-        public void SetAsUndone()
+        public Result SetAsUndone()
         {
             if (IsDone == false)
             {
-                throw new Exception();
+                return Result.Fail(new UndoStateChangeError());
             }
 
             IsDone = false;
+            return Result.Ok();
         }
 
-        private const int DescriptionMaxLength = 128;
+        
 
         private Todo() { }
 
