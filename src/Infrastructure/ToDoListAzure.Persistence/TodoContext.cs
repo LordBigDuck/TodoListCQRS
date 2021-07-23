@@ -11,6 +11,11 @@ namespace TodoListAzure.Persistence
         {
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(TodoContext).Assembly);
+        }
+
         public DbSet<Todo> Todos { get; set; }
         public DbSet<TodoCategory> Categories { get; set; }
     }
