@@ -15,4 +15,9 @@
     <ProjectReference Include="..\ToDoListAzure.Domain\TodoListAzure.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\TodoCategories\Commands\" />
+    <Folder Include="Features\TodoCategories\Queries\GetById\" />
+  </ItemGroup>
+
 </Project>
