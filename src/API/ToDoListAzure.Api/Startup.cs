@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 
+using TodoListAzure.Api.Middlewares;
 using TodoListAzure.Application;
 using TodoListAzure.Persistence;
 
@@ -43,6 +44,8 @@ namespace TodoListAzure.Api
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ToDoListAzure.Api v1"));
             }
+
+            app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
             app.UseHttpsRedirection();
 

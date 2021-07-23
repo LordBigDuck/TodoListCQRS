@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using FluentResults;
-
 using MediatR;
 
 using Microsoft.AspNetCore.Http;
@@ -30,16 +28,16 @@ namespace TodoListAzure.Api.Controllers
         [HttpGet("category/{categoryId}")]
         [ProducesResponseType(typeof(PageResult<TodoResult>), StatusCodes.Status200OK)]
         public async Task<ActionResult<List<TodoResult>>> GetByCategory(
-            [FromRoute] Guid categoryId, 
+            [FromRoute] Guid categoryId,
             [FromQuery] PaginationOptions paginationOptions)
         {
-            var todoListResult = await _mediator.Send(new GetTodoListQuery 
-            { 
+            var todoListResult = await _mediator.Send(new GetTodoListQuery
+            {
                 CategoryId = categoryId,
                 PaginationOptions = paginationOptions
             });
 
-            return Ok(todoListResult);
+            return Ok(todoListResult.Value);
         }
 
         [HttpPost("category/{categoryId}/todo")]
@@ -56,10 +54,11 @@ namespace TodoListAzure.Api.Controllers
 
             var todoResult = await _mediator.Send(createCommand);
 
-            return Ok(todoResult);
+            return Created("", todoResult.Value);
         }
 
         [HttpPut("todo/{todoId}/do")]
+        [ProducesResponseType(typeof(TodoResult), StatusCodes.Status200OK)]
         public async Task<ActionResult<TodoResult>> DoTodo([FromRoute] Guid todoId)
         {
             var updateCommand = new UpdateTodoStateCommand
@@ -69,7 +68,7 @@ namespace TodoListAzure.Api.Controllers
             };
             var todoResult = await _mediator.Send(updateCommand);
 
-            return Ok(todoResult);
+            return Ok(todoResult.Value);
         }
 
         [HttpPut("todo/{todoId}/undo")]
@@ -82,7 +81,7 @@ namespace TodoListAzure.Api.Controllers
             };
             var todoResult = await _mediator.Send(updateCommand);
 
-            return Ok(todoResult);
+            return Ok(todoResult.Value);
         }
     }
 }
